@@ -2,8 +2,8 @@
 // Identify your target audience and explain how/why they would use this Quick Start.
 //Avoid borrowing text from third-party websites (copying text from AWS service documentation is fine). Also, avoid marketing-speak, focusing instead on the technical aspect.
 
-This Quick Start reference deployment guide provides step-by-step instructions for deploying https://aws.amazon.com/ko/compliance/k-isms/?nc1=h_ls[ISMS-P] architecture-based resources and environment on the AWS cloud.
+This Quick Start deployment guide provides step-by-step instructions for deploying https://aws.amazon.com/ko/compliance/k-isms/?nc1=h_ls[ISMS-P], an architecture-based environment and resources, on the AWS Cloud.
 
-This Quick Start is for organizations and users whose goal is to create cloud-based security infrastructure and services in compliance with the Personal Information & Information Security Management System (ISMS-P) as required by the Personal Information Protection Act and Act on Promotion of Information and Communications Network Utilization and Information Protection, Etc.
+This Quick Start is for organizations and users who need to create a cloud-based security infrastructure and services that comply with the Personal Information and Information Security Management System ({partner-product-name}), as required by the Personal Information Protection Act and Act on Promotion of Information and Communications Network Utilization and Information Protection, etc.
 
-This Quick Start solution is designed to implement as many ISMS-P package controls as possible, but may not include all solutions recommended.
+This Quick Start solution is designed to implement as many {partner-product-name} package controls as possible, but may not include all solutions that are recommended.

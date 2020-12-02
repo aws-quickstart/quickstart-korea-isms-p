@@ -1,1 +1,3 @@
-// placeholder
+
+=== Launch into a new VPC
+include::isms-entrypoint-new-vpc.template.adoc[]

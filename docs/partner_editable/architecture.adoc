@@ -1,49 +1,31 @@
-Deploying this Quick Start template builds the following AWS cloud architecture that achieves the key requirements of ISMS-P controls. It configures AWS security services and delivers essential security for critical data and infrastructure.
+Deploying this Quick Start template builds the following AWS Cloud architecture to meet the key requirements of {partner-product-name} controls. It configures AWS security services for critical data and infrastructure.
 
 // Replace this example diagram with your own. Send us your source PowerPoint file. Be sure to follow our guidelines here : http://(we should include these points on our contributors giude)
 :xrefstyle: short
 [#architecture1]
 .Quick Start architecture for {partner-product-short-name} on AWS
-image::../images/architecture_diagram.png[Architecture,width=100%,height=100%]
+image::../images/K-ISMS-architecture-diagram.png[Architecture,width=100%,height=100%]
 
 As shown in <<architecture1>>, the Quick Start sets up the following:
 
-* A multi-service Availability Zone (AZ) architecture with management and production VPCs
-** In the management VPC, a bastion host in a public subnet that enables system administrator access and connection via Secure Shell (SSH) for troubleshooting EC2 instances.
-** In the production VPC, web and application instances with public (front-end) and private (back-end) subnets for web, application, and database layers.
-* Standard security groups for EC2 instances.
-* Default AWS Identity and Access Management configurations that include groups, roles, and instance profiles as well as customizable IAM policies.
-* AWS Key Management Service (KMS) for CloudTrail and RDS key encryption.
-* Rules to examine encryption policies.
+* A multi-service Availability Zone (AZ) architecture with management and production virtual private networks (VPC).
+* In the management VPC:
+** AWS-managed network address translation (NAT) gateways to control public network access by the resources in the private subnets.
+** A bastion host in a public subnet that provides system administrator access and connection via Secure Shell (SSH) for troubleshooting Amazon Elastic Compute Cloud (Amazon EC2) instances. The bastion host is assigned an Elastic IP address (EIP).
+* In the production VPC:
+** AWS-managed network address translation (NAT) gateways to control public network access by the resources in the private subnets.
+** Web and application instances with public (front-end) and private (back-end) subnets for web, application, and database layers.
+** A redundant Amazon Relational Database Service (Amazon RDS) database in a multi-AZ configuration.
+** Separate Auto Scaling groups for web and application instances to secure high availability, and a three-tier web application (WordPress) that supports load balancing with Application Load Balancer.
+* Standard security groups for Amazon EC2 instances.
+* Default AWS Identity and Access Management (IAM) configurations that include groups, roles, and instance profiles as well as customizable IAM policies.
+* AWS Key Management Service (AWS KMS) for AWS CloudTrail and Amazon RDS key encryption.
 * Amazon GuardDuty to identify external intrusion threats.
-* Notification policies based on SNS topics to capture RDS CPU/Storage alarms.
+* Notification policies based on Amazon Simple Notification Service (Amazon SNS) topics to capture Amazon RDS CPU and storage alarms.
 * AWS Config rules to monitor security policies and compliance.
-* An AWS WAF that creates response rules (Core Rule, WordPress, Application, SQL database, PHP application) automatically against the top tem Open Web Application Security Project (OWASP) vulnerabilities.
-* Separate Auto Scaling groups for web and application instances to secure high availability, and a three-tier web application (WordPress) that supports Application Load Balancers.
-* S3 buckets for centralized logging and AWS WAF.
-* A redundant Amazon Relational Database Service (RDS) database in a multi-AZ configuration.
-* AWS-managed network address translation (NAT) gateways to control public network access by the resources in the private subnets.
-* 11 CloudWatch metric filters and alarms with following topics:
-** https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudwatch-alarms-for-cloudtrail.html#cloudwatch-alarms-for-cloudtrail-s3-bucket-activity[Amazon
-S3 bucket activity]
-** https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudwatch-alarms-for-cloudtrail.html#cloudwatch-alarms-for-cloudtrail-security-group[Security
-Group configuration changes]
-** https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudwatch-alarms-for-cloudtrail.html#cloudwatch-alarms-for-cloudtrail-network-acl[Network
-Access Control List (ACL) changes]
-** https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudwatch-alarms-for-cloudtrail.html#cloudwatch-alarms-for-cloudtrail-gateway-changes[Network
-cateway changes]
-** https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudwatch-alarms-for-cloudtrail.html#cloudwatch-alarms-for-cloudtrail-vpc-changes[Amazon
-Virtual Private Cloud (VPC) changes]
-** https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudwatch-alarms-for-cloudtrail.html#cloudwatch-alarms-for-cloudtrail-ec2-instance-changes[Amazon
-EC2 instance changes]
-** https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudwatch-alarms-for-cloudtrail.html#cloudwatch-alarms-for-cloudtrail-ec2-large-instance-changes[EC2
-Large instance changes]
-** https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudwatch-alarms-for-cloudtrail.html#cloudwatch-alarms-for-cloudtrail-cloudtrail-changes[CloudTrail
-changes]
-** https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudwatch-alarms-for-cloudtrail.html#cloudwatch-alarms-for-cloudtrail-signin[Console
-sign-in failures]
-** https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudwatch-alarms-for-cloudtrail.html#cloudwatch-alarms-for-cloudtrail-authorization-failures[Authorization
-failures]
-** https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudwatch-alarms-for-cloudtrail.html#cloudwatch-alarms-for-cloudtrail-iam-policy-changes[IAM
-policy changes]
-* 4 CloudWatch alarms to monitor the reliability, availability, and performance of Amazon RDS. CloudWatch alarms trigger Amazon SNS topics and send email notifications.
+* An AWS WAF that creates response rules (Core Rule, WordPress, Application, SQL database, PHP application) automatically against the top 10 Open Web Application Security Project (OWASP) vulnerabilities.
+* Amazon Simple Storage Service (Amazon S3) buckets for centralized logging and AWS WAF.
+* Amazon CloudWatch metric filters and alarms to monitor various aspects of the infrastructure, including the reliability, availability, and performance of Amazon RDS.
+* Amazon CloudWatch alarms to trigger Amazon SNS topics and send email notifications.
+* AWS Systems Manager for managing Amazon Machine Images (AMI) and keeping them current.  
+* The AWS Secrets Manager for creating and rotating the database password. 

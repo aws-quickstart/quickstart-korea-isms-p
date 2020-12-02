@@ -1,1 +1,1 @@
-This Quick Start assumes familiarity with the ISMS-P reference architecture. Refer to https://aws.amazon.com/ko/artifact/[AWS Artifact] or https://aws.amazon.com/ko/compliance/k-isms/?nc1=h_ls[ISMS compliance] for more information.
+This Quick Start assumes familiarity with the {partner-product-name} reference architecture. See https://aws.amazon.com/ko/artifact/[AWS Artifact] or https://aws.amazon.com/ko/compliance/k-isms/?nc1=h_ls[ISMS compliance] for more information.

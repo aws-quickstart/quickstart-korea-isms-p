@@ -19,27 +19,28 @@ This Quick Start requires a subscription to the AMI for {partner-product-short-n
 endif::marketplace_subscription[]
 // \Not to be edited
 
-=== Make sure that at least one Amazon EC2 key pair exists in your AWS account in the Region where you plan to deploy the Quick Start.
+=== Confirm Amazon EC2 key pair 
 
-https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html[Key pair] a|
-Make note of the key pair name. You need it during deployment. To create a key pair, follow the https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html[instructions in the AWS documentation].
+Make sure that at least one Amazon EC2 key pair exists in your AWS account in the Region where you plan to deploy the Quick Start.
 
-For testing or proof-of-concept purposes, we recommend creating a new key pair instead of using one that’s already being used by a production instance.
+Make note of the key pair name, as you will need it during deployment. To create a key pair, see https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html[Amazon EC2 key pairs and Linux instances].
 
-=== Ensure you have the correct IAM permissions
+For testing or proof-of-concept purposes, create a new key pair instead of using one that’s already being used by a production instance.
 
-https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_job-functions.html[IAM permissions] |Before launching the Quick Start, you must log in to the AWS Management Console with IAM permissions for the resources and actions the templates deploy. The _AdministratorAccess managed policy within IAM provides sufficient permissions_, although your organization may choose to use a custom policy with more restrictions.
+=== Confirm IAM permissions
 
-=== Check the status of Amazon GuardDuty and AWS Config
+Before launching the Quick Start, log in to the AWS Management Console with IAM permissions for the resources and actions the templates deploy. The _AdministratorAccess_ managed policy within IAM provides sufficient permissions, although your organization may choose to use a custom policy with more restrictions. For more information, see https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_job-functions.html[AWS managed policies for job functions].
 
-1.  https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_suspend-disable.html[Disable] Amazon GuardDuty or set the "EnableGuardDuty" CloudFormation parameter to "Disable" if it is enabled in your region. An attempt to deploy a GuardDuty detector to an account with an already configured detector will result in a deployment failure.
-2.  https://docs.aws.amazon.com/ko_kr/config/latest/developerguide/gs-console.html[Enable] AWS Config if it is disabled in your region to avoid trouble during deployment.
+=== Check status of Amazon GuardDuty and AWS Config
+
+. Disable Amazon GuardDuty or set the _EnableGuardDuty_ CloudFormation parameter to _Disable_ if it is enabled in your Region. If you attempt to deploy a GuardDuty detector to an account with an already-configured detector, the deployment will fail. For more information, see https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_suspend-disable.html[Suspending or disabling GuardDuty].
+. Enable AWS Config if it is disabled in your Region to avoid trouble during deployment. For more information, see https://docs.aws.amazon.com/ko_kr/config/latest/developerguide/gs-console.html[Setting up AWS Config through the console].
 
 === Launch the Quick Start
 
 NOTE: You are responsible for the cost of the AWS services used while running this Quick Start reference deployment. There is no additional cost for using this Quick Start. For full details, see the pricing pages for each AWS service used by this Quick Start. Prices are subject to change.
 
-. Sign in to your AWS account, and choose one of the following options to launch the AWS CloudFormation template. For help with choosing an option, see link:#_deployment_options[Deployment options] earlier in this guide.
+. Sign in to your AWS account, and choose the following option to launch the AWS CloudFormation template. 
 
 [cols=2*]
 |===
@@ -51,7 +52,7 @@ NOTE: You are responsible for the cost of the AWS services used while running th
 Each deployment takes about {deployment_time} to complete.
 
 [start=2]
-. Check the AWS Region that’s displayed in the upper-right corner of the navigation bar, and change it if necessary. This is where the network infrastructure for {partner-product-short-name} will be built. The template is launched in the {default_deployment_region} Region by default.
+. Check the AWS Region that’s displayed in the upper-right corner of the navigation bar, and change it if necessary. This Region is where the network infrastructure for {partner-product-short-name} is built. The template is launched in the {default_deployment_region} Region by default.
 
 // *Note:* This deployment includes Amazon EFS, which isn’t currently supported in all AWS Regions. For a current list of supported Regions, see the https://docs.aws.amazon.com/general/latest/gr/elasticfilesystem.html[endpoints and quotas webpage].
 

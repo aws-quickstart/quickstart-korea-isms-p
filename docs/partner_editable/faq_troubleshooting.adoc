@@ -39,3 +39,29 @@ For additional information, see https://docs.aws.amazon.com/AWSCloudFormation/la
 *Q.* I deleted the CloudFormation stack deployed but some resources remain undeleted.
 
 *A.* Either a) choose the stack and check the messaged displayed on the *Events* tab, or b) identify the resources created as a result of the Quick Start template deployment and delete them following the applewebdata://0A124541-6BAA-480E-8D52-6D465FB7C4F9/#_Technical_requirements[Technical requirements] section.
+
+*Q.* What topics are used for the Amazon CloudWatch metric filters and alarms?
+
+*A.* The following topics are used:
+* https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudwatch-alarms-for-cloudtrail.html#cloudwatch-alarms-for-cloudtrail-s3-bucket-activity[Amazon
+S3 bucket activity]
+* https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudwatch-alarms-for-cloudtrail.html#cloudwatch-alarms-for-cloudtrail-security-group[Security
+Group configuration changes]
+* https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudwatch-alarms-for-cloudtrail.html#cloudwatch-alarms-for-cloudtrail-network-acl[Network
+Access Control List (ACL) changes]
+* https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudwatch-alarms-for-cloudtrail.html#cloudwatch-alarms-for-cloudtrail-gateway-changes[Network
+cateway changes]
+* https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudwatch-alarms-for-cloudtrail.html#cloudwatch-alarms-for-cloudtrail-vpc-changes[Amazon
+Virtual Private Cloud (VPC) changes]
+* https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudwatch-alarms-for-cloudtrail.html#cloudwatch-alarms-for-cloudtrail-ec2-instance-changes[Amazon
+EC2 instance changes]
+* https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudwatch-alarms-for-cloudtrail.html#cloudwatch-alarms-for-cloudtrail-ec2-large-instance-changes[EC2
+Large instance changes]
+* https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudwatch-alarms-for-cloudtrail.html#cloudwatch-alarms-for-cloudtrail-cloudtrail-changes[CloudTrail
+changes]
+* https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudwatch-alarms-for-cloudtrail.html#cloudwatch-alarms-for-cloudtrail-signin[Console
+sign-in failures]
+* https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudwatch-alarms-for-cloudtrail.html#cloudwatch-alarms-for-cloudtrail-authorization-failures[Authorization
+failures]
+* https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudwatch-alarms-for-cloudtrail.html#cloudwatch-alarms-for-cloudtrail-iam-policy-changes[IAM
+policy changes]
