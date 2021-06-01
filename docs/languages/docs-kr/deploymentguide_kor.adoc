@@ -1,0 +1,877 @@
+ISMS-P on the AWS Cloud
+
+Quick Start 참조 배포 가이드
+
+2020년 12월
+
+<AWS 코리아 프로페셔널 서비스 팀 > 유제광, 권연주, 진상열
+
+<Quick Start 팀> Ameigh Troy, May Dave
+
+<SK Infosec / 파트너 > 천종현
+
+____
+https://github.com/aws-quickstart/quickstart-korea-isms-p[GitHub
+저장소]를 방문하여 소스 파일을 확인하고 피드백을 게시하거나 버그를
+
+보고하거나 이 Quick Start에 대한 기능 아이디어를 제출할 수 있습니다.
+____
+
+== Contents
+
+link:#개요[개요 3]
+
+link:#aws의-isms-p[AWS의 ISMS-P 3]
+
+link:#비용[비용 3]
+
+link:#소프트웨어-라이센스[소프트웨어 라이센스 4]
+
+link:#아키텍처[아키텍처 4]
+
+link:#배포-계획[배포 계획 6]
+
+link:#전문-지식[*전문 지식* 6]
+
+link:#aws-account[*AWS account* 6]
+
+link:#기술-요구사항[*기술 요구사항* 7]
+
+link:#리소스-할당[*리소스 할당* 7]
+
+link:#지원-리전[*지원 리전* 8]
+
+link:#ec2-key-pairs[*EC2 Key pairs* 8]
+
+link:#iam-권한[*IAM 권한* 9]
+
+link:#배포-옵션[*배포 옵션* 9]
+
+link:#배포-단계[배포 단계 9]
+
+link:#aws-account로-로그인[*AWS account로 로그인* 9]
+
+link:#_Toc59544336[*Amazon EC2 Key pair 확인* 9]
+
+link:#amazon-guardduty와-aws-config-상태-확인[*Amazon GuardDuty와 AWS
+Config 상태 확인* 10]
+
+link:#배포-테스트[배포 테스트 12]
+
+link:#템플릿-및-리소스-삭제[템플릿 및 리소스 삭제 12]
+
+link:#cloudformation-템플릿-삭제[*CloudFormation 템플릿 삭제* 12]
+
+link:#미-삭제된-리소스의-확인-및-삭제[*미 삭제된 리소스의 확인 및 삭제*
+13]
+
+link:#aws에서-isms-p의-사용-모범-사례[AWS에서 ISMS-P의 사용 모범 사례
+13]
+
+link:#보안[보안 14]
+
+link:#다른-유용한-정보[다른 유용한 정보 15]
+
+link:#자주-묻는-질문[자주 묻는 질문 15]
+
+link:#파라미터-레퍼런스[파라미터 레퍼런스 18]
+
+link:#새-vpc에-isms-p를-배포하기-위한-파라미터[새 VPC에 ISMS-P를
+배포하기 위한 파라미터 18]
+
+link:#피드백-보내기[피드백 보내기 20]
+
+link:#quick-start-참조-배포[Quick Start 참조 배포 21]
+
+link:#github-저장소[GitHub 저장소 21]
+
+link:#notice[Notice 22]
+
+이 Quick Start는 Amazon Web Service(AWS) Korea와 SK Infosec의 협업으로
+개발 되었습니다. *https://aws.amazon.com/quickstart/[Quick Start]는 AWS
+모범 사례에 따라 AWS CloudFormation 템플릿을 사용하여 AWS에 주요 기술을
+구성하는 자동화 된 배포 방식 입니다.*
+
+== 개요
+
+이 Quick Start 배포 가이드는 AWS 클라우드에 정보보호 및 개인정보보호
+관리체계 (https://aws.amazon.com/ko/compliance/k-isms/?nc1=h_ls[ISMS-P])
+아키텍쳐에 기반한 리소스와 환경을 배포하기 위한 단계별 지침을
+제공합니다.
+
+이 Quick Start는 개인정보보호법과 정보통신망의 이용촉진 및 정보보호등에
+관한 법률에서 요구하는 ISMS-P 인증에 부합할 수 있도록 클라우드 기반 보안
+관련 인프라 환경과 서비스를 생성하려는 조직 및 사용자를 위한 것입니다.
+
+*정보 : Amazon은 Quick Start에서 AWS와 협력 한 AWS 파트너와 사용자 배포
+정보를 공유 할 수 있습니다.*
+
+== AWS의 ISMS-P 
+
+이 참조 아키텍처는 ISMS-P 통제 요구 사항을 지원하는 관련 보안 및 관리
+서비스를 포함 합니다. 또한, 일반적인 다중 계층 웹 애플리케이션을
+지원하기 위해 여러 AWS 서비스를 결합하는 방법을 보여 줍니다.
+
+== 비용
+
+이 Quick Start 를 실행하는 동안 사용 된 AWS 서비스 비용은 사용자가 부담
+합니다. Quick Start 사용에 대한 추가 비용은 없습니다.
+
+이 Quick Start 용 AWS CloudFormation 템플릿에는 사용자가 지정 가능한
+구성 파라미터가 포함되어 있습니다. 인스턴스 타입과 같은 일부 구성은 배포
+비용에 영향을 줍니다. 예상 비용은 사용할 각 AWS 서비스의
+https://aws.amazon.com/ko/pricing/?nc1=h_ls[요금 페이지]를 참고 합니다.
+가격은 변경 될 수 있습니다.
+
+*Tip:* Quick Start를 배포 한 후 Account의 Amazon Simple Storage Service
+(Amazon S3) 버킷에 결제 지표를 제공하기 위해
+https://docs.aws.amazon.com/ko_kr/cur/latest/userguide/cur-create.html[AWS
+비용 및 사용 보고서]를 생성 합니다. 이 보고서는 매달 사용량을 기준으로
+예상 비용을 제공하고 월말에 데이터를 집계 합니다. 자세한 내용은
+https://docs.aws.amazon.com/ko_kr/cur/latest/userguide/what-is-cur.html[AWS
+비용 및 사용 보고서란 무엇입니까?]를 참고 합니다.
+
+== 소프트웨어 라이센스
+
+이 Quick Start는 라이센스가 필요하지 않습니다.
+
+== 아키텍처
+
+Quick Start의 템플릿을 사용하면 ISMS-P 통제 항목의 중요한 요구 사항을
+충족하는 AWS 클라우드 아키텍처를 구축할 수 있습니다.주요 데이터 및
+인프라스트럭쳐를 위한 AWS의 보안 서비스를 구성 합니다.
+
+image:media/image1.png[image,width=648,height=382]
+
+그림 1: AWS의 ISMS-P Quick Start 아키텍쳐
+
+그림 1과 같이, 이 Quick Start는 다음의 구성 요소 및 기능이 포함되어
+있습니다 :
+
+* 관리 및 프로덕션 가상 사설망 (VPC)이 포함 된 다중 서비스 가용 영역
+(AZ) 아키텍처.
+* 관리 VPC:
+
+* 프라이빗 서브넷의 리소스에 의한 퍼블릭 네트워크 액세스를 제어하는
+​​AWS 관리 형 네트워크 주소 변환 게이트웨이(NAT).
+* Amazon Elastic Compute Cloud (Amazon EC2) 인스턴스 문제 발생시 해결을
+위해 SSH (Secure Shell)를 통해 시스템 관리자 액세스 및 연결을 제공하는
+퍼블릭 서브넷의 배스천 호스트. 배스천 호스트에는 탄력적 IP 주소 (EIP)가
+할당 됩니다.
+
+* 프로덕션 VPC:
+
+* 프라이빗 서브넷의 리소스로 퍼블릭 네트워크 액세스를 제어하는 ​​AWS
+관리 형 NAT 게이트웨이.
+* 웹, 애플리케이션 및 데이터베이스 계층을 위한 퍼블릭 (프런트 엔드) 및
+프라이빗 (백 엔드) 서브넷이 있는 웹 및 애플리케이션 인스턴스.
+* 다중 AZ 구성의 이중으로 구성된 Amazon Relational Database Service
+(Amazon RDS) 데이터베이스.
+* 웹 및 애플리케이션 인스턴스 용 Auto Scaling 그룹을 분리하여 고
+가용성을 확보하고 Application Load Balancer로 로드 밸런싱을 지원하는 3
+계층 웹 애플리케이션 (WordPress).
+
+* EC2 인스턴스를 위한 표준 시큐리티 그룹 구성.
+* 그룹, 역할 및 인스턴스 프로파일과 함께 사용자 지정 IAM 정책이 포함된
+기본 AWS Identity and Access Management(IAM) 구성.
+* CloudTrail과 RDS Key 암호화를 위한 KMS(Key Management Service) 구성.
+* 외부 침해 위협에 대한 식별을 위한 Amazon GuardDuty 서비스 구성.
+* Amazon RDS CPU와Storage 알람 시Amazon Simple Notification
+Service(Amazon SNS) Topic 을 이용한 알림 정책 구성.
+* AWS Config Rules의 정의 및 배포로 보안 정책 및 규정 준수 여부를 확인.
+* OWASP (Open Web Application Security Project) 상위 10 개 웹
+애플리케이션 취약성에 대한 대응 규칙을 자동 생성(Core Rule, Wordpress,
+Application, Sql database, php Application) 하는 AWS WAF구성.
+* 중앙 집중식 로깅을 위한 Amazon S3 버킷.
+* {blank}
++
+____
+Amazon RDS의 안정성, 가용성 및 성능을 포함하여 인프라의 다양한 측면을
+모니터링 하기 위한 Amazon CloudWatch 지표 필터 및 경보.
+____
+* {blank}
++
+____
+Amazon SNS 주제를 트리거하고 이메일 알림을 보내는 Amazon CloudWatch
+경보.
+____
+* {blank}
++
+____
+Amazon 머신 이미지 (AMI)를 관리하고 최신 상태로 유지하기 위한 AWS
+Systems Manager.
+____
+* {blank}
++
+____
+데이터베이스 암호 생성 및 교체를 위한 AWS Secrets Manager.
+____
+
+== 배포 계획­
+
+=== *전문 지식*
+
+이 배포 안내서는 또한 AWS 서비스에 대한 중간 수준의 지식이 필요 합니다.
+AWS를 처음 사용하는 경우 https://aws.amazon.com/ko/getting-started/[AWS
+시작하기]와 https://aws.amazon.com/ko/training/[AWS 교육 및 인증 웹
+사이트]의 방문을 권장 합니다. 해당 사이트는 AWS 클라우드에서 인프라와
+애플리케이션을 설계, 배포 및 운영하는 방법을 학습하기 위한 자료를 제공
+합니다.
+
+이 Quick Start는 ISMS-P 레퍼런스 아키텍처에 익숙하다고 가정 합니다.
+자세한 내용은 AWS https://aws.amazon.com/ko/artifact/[Artifact] 또는
+https://aws.amazon.com/ko/compliance/k-isms/[ISMS compliance] 를 참고
+합니다.
+
+=== *AWS account*
+
+AWS Account가 없다면, https://aws.amazon.com/[https://aws.amazon.com] 에
+접속하여 화면의 지침에 따라 Account를 생성 합니다. 가입 프로세스의
+일부는 전화를 받거나 전화 키패드를 이용하여 PIN을 입력하는 것이 포함
+됩니다.
+
+AWS account는 모든 AWS 서비스에 자동으로 등록 됩니다. 사용한 서비스에
+대해서만 요금이 부과 됩니다.
+
+=== *기술 요구사항*
+
+Quick Start를 실행하기 전에 Quick Start를 배포할 Account에는 아래의
+테이블에 기재된 내용이 설정되어 있어야 합니다. 그렇지 않으면 배포는
+실패하게 됩니다.
+
+=== *리소스 할당*
+
+필요한 경우 다음 리소스에 대한
+https://console.aws.amazon.com/servicequotas/home?region=ap-northeast-2#!/[서비스
+할당량 증가]를 요청 합니다. 기존 배포에서 해당 리소스를 사용하는 경우
+서비스 할당량 증가 요청을 해야 이 배포에서 기본 할당량을 초과하여 사용
+할 수 있습니다.
+https://console.aws.amazon.com/servicequotas/home?region=ap-northeast-2#!/[Service
+Quotas 콘솔]은 일부 서비스의 일부 측면에 대한 사용량 및 할당량을 표시
+합니다. 자세한 내용은
+https://docs.aws.amazon.com/servicequotas/latest/userguide/intro.html[AWS
+설명서]를 참고 합니다.
+
+https://console.aws.amazon.com/trustedadvisor/home?#/category/service-limits[AWS
+Trusted Advisor]는 일부 서비스의 몇가지 측면에 대한 사용량 및 제한을
+표시하는 서비스 할당량 검사를 제공 합니다.
+
+[cols=",",options="header",]
+|===
+|리소스 |해당 템플릿 배포시 사용
+|VPCs |2
+|Internet Gateway |2
+|Elastic IP addresses |5
+|Lambda functions |3
+|Identity and Access Management (IAM) groups |5
+|IAM roles |11
+|Auto Scaling groups |2
+|Application Load Balancers |2
+|t3.small instances |1
+|m5.large instance |4
+|db.r4 large instances |2
+|CloudWatch Log Group |1
+|CloudWatch Alarm |15
+|Config Conformance Pack |1
+|WAF network access control lists (ACLs) |1
+|Amazon GuardDuty subscriptions |1
+|===
+
+=== *지원 리전*
+
+이 배포에는 현재 모든 AWS 리전에서 지원되지 않는 서비스(예: AWS Auto
+Scaling, AWS WAF, AWS Firewall Manager 등)가 포함 됩니다.이 서비스에
+대해 지원되는 리전의 최신 목록은 AWS 설명서의
+https://docs.aws.amazon.com/general/latest/gr/aws-service-information.html[서비스
+엔드 포인트 및 할당량] 과
+https://aws.amazon.com/ko/about-aws/global-infrastructure/regional-product-services/?nc1=h_ls[리전표]
+페이지를 참고 합니다
+
+*Tip:* 특정 리전은 opt-in 기반으로 구성이 가능 합니다.
+https://docs.aws.amazon.com/general/latest/gr/rande-manage.html[Managing
+AWS Regions] 를 참고 합니다.
+
+=== *EC2 Key pairs*
+
+Quick Start를 배포하려는 리전의 AWS 계정에 하나 이상의 Amazon EC2 키
+페어가 있는지 확인 합니다. 배포 중에 필요하므로, 키 페어 이름을 별도로
+기록해 둡니다. 키 페어를
+생성하려면https://docs.aws.amazon.com/ko_kr/AWSEC2/latest/UserGuide/ec2-key-pairs.html[Amazon
+EC2 키 페어 및 Linux 인스턴스] 를 참고 합니다.
+
+Proof-of-concept 증명을 위해 프로덕션 인스턴스에서 이미 사용중인 키 쌍을
+사용하는 대신 새 키 쌍을 만드는 것을 권장 합니다.
+
+=== *IAM 권한*
+
+Quick Start를 시작하기 전에, 템플릿이 배포하는 리소스와 작업에 대한 IAM
+권한을 사용하여AWS Management Console에 로그인 해야 합니다.
+_AdministratorAccess 관리형 정책은 충분한 권한을 제공하지만,_ 조직에서
+더 많은 제한이 있는 사용자 지정 정책(custom policy)를 선택하여 사용할
+수도 있습니다. 자세한 내용은
+https://docs.aws.amazon.com/ko_kr/IAM/latest/UserGuide/access_policies_job-functions.html[직무에
+관한 AWS 관리형 정책]을 참고 합니다.
+
+=== *배포 옵션*
+
+이 Quick Start는 하나의 배포 옵션을 제공 합니다.
+
+* *ISMS-P 참조 아키텍처를 새 VPC에 배포 (엔드 투 엔드 배포)*. 이 옵션은
+VPC, 서브넷, NAT 게이트웨이, 보안 그룹, 배스천 호스트 및 기타 인프라
+구성 요소로 구성된 새로운 AWS 환경을 구축 합니다. 그런 다음 ISMS-P 참조
+아키텍처를 새 VPC에 배포 합니다.
+
+== 배포 단계
+
+=== *AWS account로 로그인*
+
+[arabic]
+. {blank}
++
+____
+필요 권한이 있는 IAM 사용자 역할을 이용하여, https://aws.amazon.com 의
+AWS Account에 로그인 합니다. 자세한 내용은 이 가이드 앞 부분의
+link:#개요[배포 계획]을 참고 합니다.
+____
+. {blank}
++
+____
+link:#기술-요구사항[기술 요구사항] 섹션에 설명된 대로 AWS Account가
+올바르게 구성되었는지 확인 합니다.
+____
+
+=== *Amazon EC2 Key pair 확인*
+
+Quick Start를 배포하려는 리전의 AWS 계정에 하나 이상의 Amazon EC2 키
+페어가 있는지 확인 합니다. 배포 중에 필요하므로, 키 페어 이름을 별도로
+기록해 둡니다. 키 페어를
+생성하려면https://docs.aws.amazon.com/ko_kr/AWSEC2/latest/UserGuide/ec2-key-pairs.html[Amazon
+EC2 키 페어 및 Linux 인스턴스] 를 참고 합니다.
+
+Proof-of-concept 증명을 위해 프로덕션 인스턴스에서 이미 사용중인 키 쌍을
+사용하는 대신 새 키 쌍을 만드는 것을 권장 합니다.
+
+*IAM 권한 확인*
+
+Quick Start를 시작하기 전에, 템플릿이 배포하는 리소스와 작업에 대한 IAM
+권한을 사용하여AWS Management Console에 로그인 해야 합니다.
+_AdministratorAccess 관리형 정책은 충분한 권한을 제공하지만,_ 조직에서
+더 많은 제한이 있는 사용자 지정 정책(custom policy)를 선택하여 사용할
+수도 있습니다. 자세한 내용은
+https://docs.aws.amazon.com/ko_kr/IAM/latest/UserGuide/access_policies_job-functions.html[직무에
+관한 AWS 관리형 정책]을 참고 합니다.
+
+=== *Amazon GuardDuty와 AWS Config 상태 확인*
+
+[arabic]
+. {blank}
++
+____
+Amazon GuardDuty가 해당 리전에서 이미 활성화된 경우
+https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_suspend-disable.html[비활성화]하거나
+CloudFormation 템플릿의 해당 섹션을 제거 합니다. 이미 구성된 Detector가
+있는 계정에 GuardDuty Detector를 배포하려고 하면 배포가 실패 합니다.
+____
+
+[arabic]
+. {blank}
++
+____
+AWS Config가 해당 리전에 비 활성화되어 있는 경우, AWS Config를
+https://docs.aws.amazon.com/ko_kr/config/latest/developerguide/gs-console.html[활성화]
+하여야 문제없이 배포가 진행 됩니다.
+____
++
+*Quick Start 실행*
+
+*정보:* 이 Quick Start 참조 배포를 실행하는 사용자는 비용에 대한 책임이
+있습니다. 이 Quick Start를 사용하는 것에 대한 비용은 발생하지 않습니다.
+이 가이드의 지침에 사용되는 AWS CloudFormation 콘솔이 새로 디자인 되었을
+경우, 몇몇 사용자 인터페이스 요소가 다를 수 있습니다.
+
+{empty}1. Sign in to your AWS account로 로그인 하여 AWS CloudFormation
+템플릿을 다음 단계와 같이 실행 합니다.
+
+[cols=",",]
+|===
+|https://fwd.aws/6WyGV[Deploy ISMS-P into a new VPC on AWS]
+|https://github.com/aws-quickstart/quickstart-korea-isms-p/blob/main/templates/isms-entrypoint-new-vpc.template.yaml[View
+template]
+|===
+
+배포가 완료 되기까지 약 1시간이 소요 됩니다.
+
+{empty}2. 화면 우측 상단 네비게이션 바에 표시되는 *리전* 정보를
+확인하여, 필요시 변경 합니다. 이 리전에 ISMS-P 의 네트워크
+인프라스트럭처가 설치 됩니다. 템플릿은 Asia Pacific (Seoul)이 기본
+리전으로 설정되어 실행 됩니다.
+
+[arabic, start=2]
+. {blank}
++
+____
+*스택 생성* 페이지에서 템플릿 URL은 기본 설정을 유지하고, **다음**을
+클릭 합니다.
+____
+. {blank}
++
+____
+*스택 세부 정보 지정* 페이지에서 필요시 스택 이름을 변경한다. 템플릿을
+검토하고 입력이 필요한 파라미터는 값을 입력 합니다. 다른 모든 파라미터의
+경우 기본 설정을 검토하고 필요에 따라 사용자 정의 값을 입력 합니다. 각
+파라미터의 상세 정보는 이 배포 가이드의 파라미터 레퍼런스 섹션을 참고
+합니다. 검토 및 파라미터의 사용자 정의 입력이 끝나면 **다음**을 선택
+합니다.
+____
+. {blank}
++
+____
+*스택 옵션 구성* 페이지에서
+https://docs.aws.amazon.com/ko_kr/AWSCloudFormation/latest/UserGuide/aws-properties-resource-tags.html[태그](키
+값 페어)를 지정하고
+https://docs.aws.amazon.com/ko_kr/AWSCloudFormation/latest/UserGuide/cfn-console-add-tags.html[고급
+옵션]을 설정할 수 있습니다. 완료되면 **다음**을 선택 합니다.
+____
+. {blank}
++
+____
+*검토* 페이지에서 템플릿의 설정을 검토하고 확인 합니다. 하단의 *기능*
+섹션에서 두개의 체크박스를 선택하고 템플릿이 IAM 리소스를 생성하고
+매크로를 자동으로 확장하는 기능이 필요할 수 있음을 확인 합니다.
+____
+. {blank}
++
+____
+스택을 배포하려면 **스택 생성**을 선택 합니다.
+____
+. {blank}
++
+____
+스택의 상태를 모니터링 합니다. *CREATE_COMPLECT* 상태가 되면 ISMS-P
+배포는 준비 됩니다.
+____
+. {blank}
++
+____
+그림 2에 표시된 것과 같이 스택의 *출력* 탭에 표시되는 URL을 사용하여
+생성된 리소스를 확인 합니다.
+____
+
+____
+image:media/image2.png[image,width=648,height=327]
+____
+
+그림 2: 성공적 배포 후 ISMS-P 출력 화면
+
+== 배포 테스트
+
+출력 탭의 URL 키에 지정된 링크를 열어 봅니다. 이를 통해 배포가
+성공적이었음을 확인하는 웹 페이지의 예시로 이동 합니다. 본 템플릿은 보안
+강화를 위해 HTTPS 프로토콜을 이용하여 사설 인증서를 적용 하였으므로, 웹
+접속 시 인증서 관련 경고 창이 뜰 수 있습니다.
+
+== 템플릿 및 리소스 삭제 
+
+배포된 ISMS-P Quick Start 템플릿을 삭제하려면 다음의 단계를 진행 합니다.
+
+=== *CloudFormation 템플릿 삭제*
+
+[arabic]
+. {blank}
++
+____
+AWS Console을 이용하여 CloudFormation 서비스로 이동한 후, 배포한 ISMS-P
+*Quick Start 스택 이름을 선택* 합니다. 여기서 주의할 점은 스택 생성
+과정에서 생성된 중첩 스택을 선택 하는 것이 아니라 배포시 사용한 Quick
+Start 이름의 스택을 선택해야 합니다.
+____
+. {blank}
++
+____
+화면 상단의 *삭제* 메뉴를 클릭한 뒤, 삭제 확인 질문이 팝업 되면 내용을
+확인 하고 **스택 삭제**를 클릭 합니다.
+____
+. {blank}
++
+____
+삭제가 완료되면 **상태**가 DELETE_IN_PROGRESS에서 **DELETE_COMPLETE**로
+변경 됩니다.
+____
+
+=== *미 삭제된 리소스의 확인 및 삭제*
+
+[arabic]
+. {blank}
++
+____
+드문 경우지만, 리소스를 사용하고 있거나 권한 제한과 같은 특정 사유에
+의해 몇몇 리소스가 삭제되지 않을 경우, 해당 스택을 클릭한 후 *이벤트*
+탭에 디스플레이 되는 메세지를 확인하거나 link:#기술-요구사항[기술
+요구사항] 섹션에 기재된 Quick Start 템플릿 배포 후 생성되는 리소스를
+확인하고 해당 리소스를 직접 삭제 합니다.
+____
+
+== AWS에서 ISMS-P의 사용 모범 사례
+
+<Add any best practices for using the software.>
+
+프로덕션 워크로드에 이 Quick Start를 사용하기 전에 다음 사항을 변경해야
+합니다.
+
+* 이 아키텍처는 비용을 절감하기 위해 일부 Auto Scaling Group의 경우 단일
+인스턴스와 단일 가용 영역으로Auto Scaling Group을 구현 합니다. 프로덕션
+배포의 경우 고객 환경 및 요구사항에 따라 고 가용성 구성을 위해 두 개
+이상의 가용 영역(Availability Zone)에 인스턴스가 배포되도록Auto Scaling
+Group 환경 구성을 할 필요가 있습니다.
+* VPC 서브넷의 경우 CIDR을 10.10.x.x 또는 10.100.x.x 클래스로 고정하여
+구성되며, 배포 전 템플릿 파일의 수정을 통해 고객 네트워크 환경에 맞게
+이를 변경할 수도 있습니다.
+* 이 Quick Start는 테스트 목적으로 구성된 환경으로, 일부 NACL의 경우
+트래픽 제어를 하지 않고 오픈 되어 있습니다. 템플릿의 배포 전 고객의 보안
+요구 사항에 따라 이를 정책에 맞춰 강화하여 적용 후 배포 할 필요가
+있습니다.
+* AWS 서비스를 위한 개인용 엔드포인트를 구축 합니다.
+
+== 보안
+
+<Add any security-related information.>
+
+보안 및 관련 법규는 AWS와 고객의 공유 책임 입니다. 고객은 이 솔루션을
+프로덕션 워크로드에 사용하기 전에 AWS Shared Responsibility Model에
+익숙해 질 필요가 있습니다.
+
+이 솔루션은 ISMS-P 참조 아키텍처를 기준으로 요약된 일부 통제 매커니즘을
+구현하지만, ISMS-P의 통제 항목 별 준수를 위한 모든 권고사항이 이 Quick
+Start에 포함되어 있지는 않습니다. ISMS-P 관련 지침은 AWS에서 제공하는
+별도의 문서나
+https://aws.amazon.com/ko/compliance/k-isms/?nc1=h_ls[ISMS-P 규정준수
+관련 웹 페이지]를 참고하여 해당 지침을 따르기를 권장 합니다.
+
+ISMS-P Quick Start의 기능 및 배포 가이드의 내용이 업데이트 될 경우가
+있으므로 항상 최신의 소스 파일과 문서를 참고하기를 권장 합니다.
+
+이 솔루션에서 다루지 않거나 추가 참고 설명이 필요한 일부 컨트롤은 다음과
+같습니다:
+
+* ISMS-P Quick Start는 인터넷 접속이 가능하도록 인터넷 게이트웨이를
+포함하고 있습니다. 이를 통해 PoC 개념으로 배포를 단순화 할 수 있다. 이
+솔루션에 민감한 정보를 저장하려는 고객은 ISMS-P 패키지의 지침을 검토하여
+통제 항목을 준수해야 하며, 데이터의 전송 중 암호화와 VPN 및 HTTP와 함께
+AWS Direct Connect(DX) 사용을 검토해야 합니다.
+* 구축을 간소화하기 위해 이 아키텍처는 Amazon VPC 제공 DNS를 사용
+합니다. 고객은 Amazon EC2 기반 또는 고객 사내 기반 DNS 서비스를 사용하는
+것을 고려할 수 있습니다.
+* Amazon EC2 인스턴스의 Root 볼륨은 암호화 되어 있지 않습니다. 민감한
+정보를 저장하는 경우
+https://aws.amazon.com/blogs/aws/new-encrypted-ebs-boot-volumes/?nc1=h_ls[New-Encrypted
+EBS Boot volume]s 를 참고 합니다.
+* 이 Quick Start에 적용되어 있는 AWS Config Rules의 규정 미 준수 AWS
+리소스에 대한 완화 기능은 적용되어 있지 않습니다. 자세한 내용은
+https://docs.aws.amazon.com/ko_kr/config/latest/developerguide/remediation.html[AWS
+Config Rules에 따른 규정 미준수 AWS 리소스 문제 해결] 페이지를 참고
+합니다.
+* 중요 데이터의 노출이나 외부 유출을 최소화 하기 위하여, KMS 혹은 3^rd^
+party solution을 통한 암호화 적용을 고려해야 합니다. 자세한 내용은
+https://docs.aws.amazon.com/ko_kr/kms/?id=docs_gateway[AWS KMS] 페이지
+및
+https://docs.aws.amazon.com/ko_kr/aws-crypto-tools/?id=docs_gateway[Crypto
+Tools] 페이지를 참고 합니다.
+* AWS WAF는 프로덕션 환경에 준비된 포괄적인 규칙 집합이 아닌 출발점으로
+고려 하도록 5개의 룰을 우선 적용되도록 설계되어 있습니다. 설정된 규칙은
+프로덕션 환경에 적용하기 전에 환경과 보안 정책에 맞도록 규칙을 검토 후
+필요한 규칙을 적용하는 것을 추천 합니다. 또한, WAF의 Action은
+**Count**로 설정되어 임의의 작업이 차단되지 않도록 적용 되어 있습니다.
+자세한 내용은
+https://docs.aws.amazon.com/ko_kr/waf/latest/developerguide/waf-rule-action.html[AWS
+WAF 규칙 작업]을 참고 합니다.
+
+== 다른 유용한 정보
+
+< Add any other details that will help the customer use the software on
+AWS. >
+
+* Multi Account 환경의 운영이나 많은 IAM 유저의 관리를 효율적으로 하기
+위한 AWS Organizations 및 SSO의 확대 적용을 고려하고 있다면
+https://docs.aws.amazon.com/ko_kr/organizations/latest/userguide/services-that-can-integrate-peregrine.html[AWS
+Single Sign-On 및 AWS Organizations] 페이지를 참고 합니다.
+
+* AWS IAM 유저의 행동이나 인프라스트럭처 및 AWS 서비스의
+생성,변경,삭제에 대한 추적성을 확보하기 위하여 AWS CloudTrail, AWS
+CloudWatch 등을 이용한 로깅 및 분석 기능을 검토해야 합니다. 자세한
+내용은 https://docs.aws.amazon.com/ko_kr/cloudtrail/index.html[AWS
+CloudTrail] 과 https://aws.amazon.com/ko/cloudwatch/features/[AWS
+CloudWatch] 페이지를 참고 합니다.
+* 이 Quick Start을 배포 후 해당 인프라스트럭처 상에 어플리케이션, 서비스
+등의 운영을 계획하고 있다면, 데이터베이스 자격 증명, API 키 및 보안
+정보를 노출하지 않고 안전하게 보관과 관리할 방법을 고려해야 합니다.
+자세한 내용은 https://aws.amazon.com/ko/secrets-manager/[AWS Secret
+Manager] 와 AWS Systems Manager의
+https://docs.aws.amazon.com/ko_kr/systems-manager/latest/userguide/systems-manager-parameter-store.html[Parameter
+Store] 페이지를 참고 합니다.
+* AWS Config의 사용 및 AWS Config Rules의 적용으로 보안 취약성의
+지속적인 모니터링과 평가 및 완화 기능의 적용을 고려해야 합니다. 자세한
+내용은 https://aws.amazon.com/ko/config/[AWS Config] 페이지를 참고
+합니다.
+
+== 자주 묻는 질문
+
+*Q.* Quick Start를 시작할 때 *CREATE_FAILED* 오류가 발생 했습니다.
+
+*A.* AWS CloudFormation이 스택을 생성하지 못할 경우, *실패 시 롤백*
+기능이 **비 활성화**로 설정된 템플릿을 다시 시작 합니다. 이 설정은 *고급
+옵션* - *스택 생성* **옵션**의 *스택 옵션 구성* 페이지에 있습니다. 이
+설정을 사용하면 스택의 상태가 유지되고 인스턴스가 실행된 상태로
+유지되므로 문제를 해결할 수 있습니다. (Windows OS의 경우,
+
+%ProgramFiles%\Amazon\EC2ConfigService and C:\cfn\log 의 로그 파일을
+참고.)
+
+*중요:* **실패 시 롤백**을 **비 활성화**로 설정하면 스택에 대해 AWS
+요금이 계속 발생 합니다. 문제 해결이 완료되면 스택을 삭제 합니다.
+
+추가 정보는 AWS 웹 사이트의
+https://docs.aws.amazon.com/ko_kr/AWSCloudFormation/latest/UserGuide/troubleshooting.html[AWS
+CloudFormation 문제 해결]을 참고 합니다.
+
+*Q.* AWS CloudFormation 템플릿을 배포할 때 크기 제한 오류가 발생
+했습니다.
+
+*A.* 이 안내서의 링크나 다른 S3 버킷에서 Quick Start 템플릿을 실행하는
+것이 권장 됩니다. 컴퓨터의 로컬 복사본이나 S3 버킷이 아닌 다른 위치에서
+템플릿을 배포하는 경우 템플릿 크기 제한이 발생할 수 있습니다. AWS
+CloudFormation 할당량에 대한 자세한 내용은
+https://docs.aws.amazon.com/ko_kr/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html[AWS
+사용 설명서]를 참고 합니다.
+
+*Q.* 랜딩 페이지 접속 시 경고 메시지가 디스플레이 됩니다.
+
+*A.* 사설 인증서를 사용한 HTTPS 프로토콜을 이용하기 때문에 브라우저마다
+다른 경고창이 뜰수 있습니다. 이때 경고를 인지하고 *Accept* 또는
+*Advanced* 페이지를 이용하여 접속할 수 있습니다.
+
+*Q.* GuardDuty Detector가 현재 Account에 이미 존재하기 때문에 스택
+생성이 실패 했습니다.
+
+*A.* 배포하려는 리전에서
+https://docs.aws.amazon.com/ko_kr/guardduty/latest/ug/guardduty_suspend-disable.html[Amazon
+GuardDuty를 비 활성화]하거나 CloudFormation 템플릿에서 GuardDuty 탐지를
+삭제 합니다.
+
+*Q.* AWS Config가 현재 Account에 비 활성화 되어 있기 때문에 스택 생성이
+실패 했습니다.
+
+*A.* Quick Start를 배포하려는 리전에서
+https://docs.aws.amazon.com/ko_kr/config/latest/developerguide/gs-console.html[AWS
+Config를 활성화] 합니다.
+
+*Q.* 알람 수신을 위한 SNS Subscription Notice 이메일을 받지 못 했습니다.
+
+*A.* Quick Start를 배포시 입력하는 스택 상세 정보의 *NotificationList*
+에 정확한 이메일을 기입 하였는지 배포된 스택의 파라미터 탭을 통하여
+확인하고 스팸 메일에 필터 되어 있는지 확인을 합니다. 만약 잘못된 이메일
+주소를 기입 하였을 경우 스택의 *업데이트* 탭을 클릭하여 정확한 이메일
+주소를 기재한 뒤 link:#배포-단계[배포 단계]를 참고 하여 스택을 다시 배포
+합니다.
+
+*Q.* 배포한 CloudFormation 스택의 삭제 시, 삭제되지 않고 남아있는
+리소스가 존재 합니다.
+
+*A.* 해당 스택을 클릭한 후 *이벤트* 탭에 디스플레이 되는 메세지를
+확인하거나
+applewebdata://0A124541-6BAA-480E-8D52-6D465FB7C4F9#_Technical_requirements[기술
+요구사항] 섹션에 기재된 Quick Start 템플릿 배포 후 생성되는 리소스를
+확인하고 해당 리소스를 삭제 합니다.
+
+*Q.* Amazon CloudWatch 지표 필터 및 경보에 대해 자세히 알아볼 수 있는
+주제는 무엇 입니까?
+
+**A.**다음 주제에 대해 링크를 통해 확인이 가능 합니다.
+
+* https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudwatch-alarms-for-cloudtrail.html#cloudwatch-alarms-for-cloudtrail-s3-bucket-activity[[.underline]#Amazon
+S3 bucket activity#]
+* https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudwatch-alarms-for-cloudtrail.html#cloudwatch-alarms-for-cloudtrail-security-group[[.underline]#Security
+Group configuration changes#]
+* https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudwatch-alarms-for-cloudtrail.html#cloudwatch-alarms-for-cloudtrail-network-acl[[.underline]#Network
+Access Control List (ACL) changes#]
+* https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudwatch-alarms-for-cloudtrail.html#cloudwatch-alarms-for-cloudtrail-gateway-changes[[.underline]#Network
+cateway changes#]
+* https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudwatch-alarms-for-cloudtrail.html#cloudwatch-alarms-for-cloudtrail-vpc-changes[[.underline]#Amazon
+Virtual Private Cloud (VPC) changes#]
+* https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudwatch-alarms-for-cloudtrail.html#cloudwatch-alarms-for-cloudtrail-ec2-instance-changes[[.underline]#Amazon
+EC2 instance changes#]
+* https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudwatch-alarms-for-cloudtrail.html#cloudwatch-alarms-for-cloudtrail-ec2-large-instance-changes[[.underline]#EC2
+Large instance changes#]
+* https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudwatch-alarms-for-cloudtrail.html#cloudwatch-alarms-for-cloudtrail-cloudtrail-changes[[.underline]#CloudTrail
+changes#]
+* https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudwatch-alarms-for-cloudtrail.html#cloudwatch-alarms-for-cloudtrail-signin[[.underline]#Console
+sign-in failures#]
+* https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudwatch-alarms-for-cloudtrail.html#cloudwatch-alarms-for-cloudtrail-authorization-failures[[.underline]#Authorization
+failures#]
+* https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudwatch-alarms-for-cloudtrail.html#cloudwatch-alarms-for-cloudtrail-iam-policy-changes[[.underline]#IAM
+policy changes#]
+
+== 파라미터 레퍼런스
+
+*정보 : 자체 배포 프로젝트에 대해 Quick Start 템플릿을 사용자 지정하지
+않는 한 Quick Start S3 버킷 이름, Quick Start S3 버킷 리전 및 Quick
+Start S3 키 접두사 레이블이 지정된 파라미터의 기본 설정을 유지하는 것이
+권장 됩니다. 이러한 매개 변수 설정을 변경하면 새 빠른 시작 위치를 지정
+하도록 코드 참조가 자동으로 업데이트 됩니다. 자세한 내용은
+https://aws-quickstart.github.io/option1.html[[.underline]#AWS Quick
+Start Contributor 's Guide#]를 참고 합니다.*
+
+=== 새 VPC에 ISMS-P를 배포하기 위한 파라미터
+
+____
+_테이블1. Network configuration:_
+____
+
+[cols=",,",options="header",]
+|===
+|파라미터 레이블(이름) |기본 값 |설명
+a|
+The First Availability zone
+
+(AvailabilityZoneA)
+
+|*_입력 필요_* |VPC의 서브넷에 사용할 첫번째 가용 영역을 선택 합니다.
+Quick Start는 목록에서 두 개의 가용 영역을 사용합니다.
+
+a|
+The Second Availability zone
+
+(AvailabilityZoneB)
+
+|*_입력 필요_* |두번째 가용 영역을 선택 합니다. 첫번째 가용 영역의
+이름과 달라야 합니다.
+|===
+
+____
+_테이블 2. ISMS Configuration:_
+____
+
+[cols=",,",options="header",]
+|===
+|파라미터 레이블 (이름) |기본 값 |설명
+a|
+Key Pair Name for Bastion Host
+
+(EC2KeyPainBastion)
+
+|*_입력 필요_* |Bastion host 로그인에 사용할 Account의SSH 키 페어. 배포
+전 단계에서 생성한 키 중 하나 입니다.
+
+a|
+Key Pair Name for production instances
+
+(EC2KeyPair)
+
+|*_입력 필요_* |EC2 인스턴스 로그인에 사용할 Account의 SSH 키 페어. 배포
+전 단계에서 생성한 키 중 하나 입니다.
+
+a|
+Database user name
+
+(DBUsername)
+
+|admin |데이터베이스 인스턴스에 연결하기 위한 사용자 이름.
+
+a|
+CIDR for access bastion host
+
+(BastionCIDR)
+
+|0.0.0.0/0 |외부 액세스에 허용 된 CIDR 블록 (VPC CIDR 사용).
+
+a|
+Enable Amazon GuardDuty
+
+(EnableGuardDuty)
+
+|enable |현재 Account에서 Guard Duty가 활성화되어 있지 않은 경우, 활성화
+|===
+
+____
+_테이블 3. Quick Start Configuration:_
+____
+
+[cols=",,",options="header",]
+|===
+|파라미터 레이블 (이름) |기본 값 |설명
+a|
+Quick Start S3 bucket name
+
+(QSS3BucketName)
+
+|_aws-quickstart_ a|
+Quick Start 자원의 S3 버킷 이름. Quick Start 버킷 이름에는 숫자, 소문자,
+대문자 및 하이픈(-)이 포함될 수 있습니다. 하이픈(-)으로 시작하거나 끝날
+수 없습니다. 확실하지 않으면 값을 변경하지 않습니다.
+
+https://aws-quickstart.github.io/option1.html 참고
+
+a|
+Quick Start S3 Bucket Region
+
+(QSS3BucketRegion)
+
+|_us-east-1_ a|
+Quick Start S3 버킷 (QSS3BucketName)이 호스팅 되는 AWS 리전. 자체 버킷을
+사용하는 경우이 값을 지정 합니다.
+
+https://aws-quickstart.github.io/option1.html 참고
+
+a|
+Quick Start S3 key prefix
+
+(QSS3KeyPrefix)
+
+|_quickstart-korea-isms-p/_ a|
+Quick Start 자원의 S3 키 접두사. Quick Start 키 접두사에는 숫자, 소문자,
+대문자, 하이픈(-) 및 슬래시(/)가 포함될 수 있습니다.확실하지 않으면 값을
+변경하지 않습니다.
+
+https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingMetadata.html 및
+https://aws-quickstart.github.io/option1.html 참고
+
+|===
+
+____
+_테이블4. 기타 파라미터:_
+____
+
+[cols=",,",options="header",]
+|===
+|파라미터 레이블 (이름) |기본 값 |설명
+|CloudWatchLogsGroupName |_CloudTrail/K-ISMS-Logs_
+|CloudTrail의CloudWatch 로그 그룹 이름
+
+|LatestAmiId
+|_/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2_
+|인스턴스에 사용되는 AMI ID.
+
+|NotificationList |_db-ops@domanin.com_ |CloudWatch 알람 및 RDS 이벤트
+통보를 보내기 위한 SNS 토픽을 구성하는 데 사용되는 이메일 주소.
+|===
+
+== 피드백 보내기
+
+피드백을 게시하거나 기능 아이디어를 제출하거나 버그를 보고하려면 이
+Quick Start 에
+대해https://github.com/aws-quickstart/quickstart-korea-isms-p[GitHub
+repository]의 *Issues* 섹션을 사용 합니다. 코드를
+제출하려면https://aws-quickstart.github.io/[Quick Start Contributor’s
+Guide] 를 참고 합니다.
+
+== Quick Start 참조 배포
+
+https://aws.amazon.com/ko/quickstart/?quickstart-all.sort-by=item.additionalFields.sortDate&quickstart-all.sort-order=desc[AWS
+Quick Start home page] 를 참고 합니다.
+
+== GitHub 저장소
+
+*https://github.com/aws-quickstart/quickstart-korea-isms-p[GitHub
+저장소]를 방문하여 이 Quick Start의 템플릿과 스크립트를 다운로드하고,
+의견을 게시하고, 사용자 지정 내용을 다른 사람과 공유 합니다.*
+
+== Notice
